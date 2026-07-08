@@ -93,10 +93,12 @@ ProjDataInfoBlocksOnCylindricalNoArcCorr::parameter_info() const
 
 //! warning Use crystal map
 Succeeded
-ProjDataInfoBlocksOnCylindricalNoArcCorr::find_scanner_coordinates_given_cartesian_coordinates(
-    int& det1, int& det2, int& ring1, int& ring2,
-    const CartesianCoordinate3D<float>& c1, const CartesianCoordinate3D<float>& c2)
-    const
+ProjDataInfoBlocksOnCylindricalNoArcCorr::find_scanner_coordinates_given_cartesian_coordinates(int& det1,
+                                                                                               int& det2,
+                                                                                               int& ring1,
+                                                                                               int& ring2,
+                                                                                               const CartesianCoordinate3D<float>& c1,
+                                                                                               const CartesianCoordinate3D<float>& c2) const
 {
 
   DetectionPosition<> det_pos1;
