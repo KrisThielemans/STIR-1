@@ -250,7 +250,7 @@ public:
 
   Bin get_bin(const LOR<float>&, const double delta_time = 0.0) const override;
 
-  Succeeded find_scanner_coordinates_given_cartesian_coordinates(int& det1, int& det2, int& ring1, int& ring2,
+  virtual Succeeded find_scanner_coordinates_given_cartesian_coordinates(int& det1, int& det2, int& ring1, int& ring2,
 					             const CartesianCoordinate3D<float>& c1,
 						     const CartesianCoordinate3D<float>& c2) const;
   
@@ -258,11 +258,11 @@ public:
 					       CartesianCoordinate3D<float>& coord_2,
 					       const Bin& bin) const;
 
-  void find_cartesian_coordinates_given_scanner_coordinates (CartesianCoordinate3D<float>& coord_1,
+  virtual void find_cartesian_coordinates_given_scanner_coordinates (CartesianCoordinate3D<float>& coord_1,
 							     CartesianCoordinate3D<float>& coord_2,
 							     const int Ring_A,const int Ring_B, 
 							     const int det1, const int det2, 
-                  const int timing_pos_num) const;
+                  const int timing_pos_num = 0) const;
  
   void find_bin_given_cartesian_coordinates_of_detection(Bin& bin,
 						  const CartesianCoordinate3D<float>& coord_1,

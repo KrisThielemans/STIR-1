@@ -275,7 +275,7 @@ RigidObject3DTransformation::transform_bin(Bin& bin,
   CartesianCoordinate3D<float> coord_1;
   CartesianCoordinate3D<float> coord_2;
   dynamic_cast<const ProjDataInfoCylindricalNoArcCorr&>(in_proj_data_info).
-    get_bin_detector_locations_in_gantry_coordinates(coord_1,coord_2,bin);
+    find_cartesian_coordinates_of_detection(coord_1,coord_2,bin);
   
   // now do the movement
   
