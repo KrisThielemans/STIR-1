@@ -57,6 +57,7 @@
 #include "stir/IO/write_to_file.h"
 #include "stir/RunTests.h"
 #include "stir/info.h"
+#include "stir/format.h"
 #include "stir/stream.h"
 #include <iostream>
 #include <sstream>
@@ -213,7 +214,7 @@ bool CoordinateSystemMappingTests::check_if_correlated(
                 << correlation << ". " << str << std::endl;
       return everything_ok = false;
     } else {
-      info(boost::format("Correlation: %s") % correlation);
+      info(format("Correlation: {}", correlation));
       return true;
     }
   }

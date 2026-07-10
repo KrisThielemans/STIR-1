@@ -186,6 +186,7 @@ private:
   
   // chase a few needed and constant after set_up() image details
   CartesianCoordinate3D<float> voxel_size;
+  CartesianCoordinate3D<float> origin;
   CartesianCoordinate3D<int> min_index, max_index;
   float fovrad_in_mm;
 
