@@ -103,14 +103,14 @@ main(int argc, char* argv[])
     {
       // AG: not shifted any more, left here for posterity.
       CartesianCoordinate3D<float> coord_1, coord_2;
-      proj_data_info_sptr->get_det_pair_locations_in_gantry_coordinates (coord_1,coord_2,
+      proj_data_info_sptr->find_cartesian_coordinates_given_scanner_coordinates (coord_1,coord_2,
                                                                                  ring_a,ring_b, 
                                                                                  det_num_a, det_num_b);
       cout << "\nObsolete function:\n"
-           << "get_det_pair_locations_in_gantry_coordinates (after shift in z)\n" 
+           << "find_cartesian_coordinates_given_scanner_coordinates (after shift in z)\n" 
            << coord_1 << coord_2 <<'\n';
       // will give same result as above
-      proj_data_info_sptr->get_bin_for_gantry_coordinate_pair(bin, coord_1, coord_2);
+      proj_data_info_sptr->find_bin_given_cartesian_coordinates_of_detection(bin, coord_1, coord_2);
       cout << "bin: (segment " << bin.segment_num() << ", axial pos " << bin.axial_pos_num()
            << ", view = " << bin.view_num() 
            << ", tangential_pos_num = " << bin.tangential_pos_num() << ")\n";

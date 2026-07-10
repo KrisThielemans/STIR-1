@@ -360,7 +360,7 @@ ProjDataInfoCylindricalNoArcCorr::get_all_det_pos_pairs_for_bin(vector<Detection
 //get_det_pair_for_gantry_coordinate_pair
 Succeeded
 ProjDataInfoCylindricalNoArcCorr::
-get_det_pair_for_gantry_coordinate_pair(int& det1, int& det2, int& ring1, int& ring2,
+find_scanner_coordinates_given_cartesian_coordinates(int& det1, int& det2, int& ring1, int& ring2,
 					             const CartesianCoordinate3D<float>& c1,
 						     const CartesianCoordinate3D<float>& c2) const
                  // ORIGINTODO
@@ -435,7 +435,7 @@ get_det_pair_for_gantry_coordinate_pair(int& det1, int& det2, int& ring1, int& r
 
 void 
 ProjDataInfoCylindricalNoArcCorr::
-get_bin_detector_locations_in_gantry_coordinates(
+find_cartesian_coordinates_of_detection(
 					CartesianCoordinate3D<float>& coord_1,
 					CartesianCoordinate3D<float>& coord_2,
 					const Bin& bin) const
@@ -445,7 +445,7 @@ get_bin_detector_locations_in_gantry_coordinates(
   get_det_pos_pair_for_bin(dpp, bin);
   
   // find corresponding cartesian coordinates
-  get_det_pair_locations_in_gantry_coordinates(coord_1,
+  find_cartesian_coordinates_given_scanner_coordinates(coord_1,
                                                coord_2,
                                                dpp.pos1().axial_coord(),
                                                dpp.pos2().axial_coord(),
@@ -457,7 +457,7 @@ get_bin_detector_locations_in_gantry_coordinates(
 
 
 void
-ProjDataInfoCylindricalNoArcCorr::get_det_pair_locations_in_gantry_coordinates(CartesianCoordinate3D<float>& coord_1,
+ProjDataInfoCylindricalNoArcCorr::find_cartesian_coordinates_given_scanner_coordinates(CartesianCoordinate3D<float>& coord_1,
                                                                                        CartesianCoordinate3D<float>& coord_2,
                                                                                        const int Ring_A,
                                                                                        const int Ring_B,
@@ -525,7 +525,7 @@ ProjDataInfoCylindricalNoArcCorr::get_det_pair_locations_in_gantry_coordinates(C
 
 void 
 ProjDataInfoCylindricalNoArcCorr::
-get_bin_for_gantry_coordinate_pair(Bin& bin,
+find_bin_given_cartesian_coordinates_of_detection(Bin& bin,
 						  const CartesianCoordinate3D<float>& coord_1,
 						  const CartesianCoordinate3D<float>& coord_2) const
                  // ORIGINTODO
@@ -536,7 +536,7 @@ get_bin_for_gantry_coordinate_pair(Bin& bin,
   int ring_b;
   
   // given two CartesianCoordinates find the intersection     
-  if (get_det_pair_for_gantry_coordinate_pair(det_num_a,det_num_b,
+  if (find_scanner_coordinates_given_cartesian_coordinates(det_num_a,det_num_b,
 							   ring_a, ring_b,
 							   coord_1,
 							   coord_2) ==

@@ -250,21 +250,21 @@ public:
 
   Bin get_bin(const LOR<float>&, const double delta_time = 0.0) const override;
 
-  Succeeded get_det_pair_for_gantry_coordinate_pair(int& det1, int& det2, int& ring1, int& ring2,
+  Succeeded find_scanner_coordinates_given_cartesian_coordinates(int& det1, int& det2, int& ring1, int& ring2,
 					             const CartesianCoordinate3D<float>& c1,
 						     const CartesianCoordinate3D<float>& c2) const;
   
-  void get_bin_detector_locations_in_gantry_coordinates(CartesianCoordinate3D<float>& coord_1,
+  void find_cartesian_coordinates_of_detection(CartesianCoordinate3D<float>& coord_1,
 					       CartesianCoordinate3D<float>& coord_2,
 					       const Bin& bin) const;
 
-  void get_det_pair_locations_in_gantry_coordinates (CartesianCoordinate3D<float>& coord_1,
+  void find_cartesian_coordinates_given_scanner_coordinates (CartesianCoordinate3D<float>& coord_1,
 							     CartesianCoordinate3D<float>& coord_2,
 							     const int Ring_A,const int Ring_B, 
 							     const int det1, const int det2, 
                   const int timing_pos_num) const;
  
-  void get_bin_for_gantry_coordinate_pair(Bin& bin,
+  void find_bin_given_cartesian_coordinates_of_detection(Bin& bin,
 						  const CartesianCoordinate3D<float>& coord_1,
 						  const CartesianCoordinate3D<float>& coord_2) const;
 
