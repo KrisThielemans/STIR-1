@@ -238,22 +238,22 @@ static bool is_multiple(const float a, const float b)
 void
 ProjMatrixByBinUsingRayTracing::set_up(
     const shared_ptr<const ProjDataInfo>& proj_data_info_sptr_v,
-    const shared_ptr<const DiscretisedDensity<3, float>>& density_info_sptr_v // TODO should be Info only
+    const shared_ptr<const DiscretisedDensity<3, float>>& density_info_ptr_v // TODO should be Info only
 )
 {
-  auto image_info_sptr = dynamic_cast<const VoxelsOnCartesianGrid<float>*>(density_info_sptr_v.get());
+  auto image_info_ptr = dynamic_cast<const VoxelsOnCartesianGrid<float>*>(density_info_ptr_v.get());
 
-  if (!image_info_sptr)
+  if (!image_info_ptr)
     error("ProjMatrixByBinUsingRayTracing initialised with wrong type of DiscretisedDensity.");
 
   if (this->already_setup)
     {
-      if (*this->proj_data_info_sptr == *proj_data_info_sptr_v && this->voxel_size == image_info_sptr->get_voxel_size()
-          && this->origin == image_info_sptr->get_origin())
+      if (*this->proj_data_info_sptr == *proj_data_info_sptr_v && this->voxel_size == image_info_ptr->get_voxel_size()
+          && this->origin == image_info_ptr->get_origin())
         {
           CartesianCoordinate3D<int> new_min_index;
           CartesianCoordinate3D<int> new_max_index;
-          image_info_sptr->get_regular_range(new_min_index, new_max_index);
+          image_info_ptr->get_regular_range(new_min_index, new_max_index);
           if (this->max_index == new_max_index && this->min_index == new_min_index)
             {
               info("ProjMatrixByBinUsingRayTracing::set_up skipped as already set-up with same characteristics.", 3);
@@ -262,8 +262,8 @@ ProjMatrixByBinUsingRayTracing::set_up(
         }
     }
 
-  ProjMatrixByBin::set_up(proj_data_info_sptr_v, density_info_sptr_v);
-  density_info_sptr = density_info_sptr_v;
+  ProjMatrixByBin::set_up(proj_data_info_sptr_v, density_info_ptr_v);
+  density_info_ptr = density_info_ptr_v;
 
   if (proj_data_info_sptr->get_scanner_ptr()->get_scanner_geometry() == "BlocksOnCylindrical" && !use_actual_detector_boundaries)
     {
@@ -272,23 +272,23 @@ ProjMatrixByBinUsingRayTracing::set_up(
       use_actual_detector_boundaries = true;
     }
 
-  voxel_size = image_info_sptr->get_voxel_size();
-  origin = image_info_sptr->get_origin();
-  image_info_sptr->get_regular_range(min_index, max_index);
+  voxel_size = image_info_ptr->get_voxel_size();
+  origin = image_info_ptr->get_origin();
+  image_info_ptr->get_regular_range(min_index, max_index);
   
-    for (int segment_num = proj_data_info_sptr->get_min_segment_num();
-       segment_num <= proj_data_info_sptr->get_max_segment_num();
+    for (int segment_num = proj_data_info_ptr->get_min_segment_num();
+       segment_num <= proj_data_info_ptr->get_max_segment_num();
        ++segment_num)
   {
      Bin bin (segment_num,0,0,0);
-     if (fabs(proj_data_info_sptr->get_sampling_in_m(bin) / voxel_size.z() - 1)> .001)
+     if (fabs(proj_data_info_ptr->get_sampling_in_m(bin) / voxel_size.z() - 1)> .001)
        error("ProjMatrixByDenselUsingRayTracing used for pixel size (in z) which is "
        "not equal to the axial sampling (you're probably not using axially compressed data). I can't handle "
        "this yet. Sorry.\n");
   }
 
   symmetries_sptr.reset(new DataSymmetriesForBins_PET_CartesianGrid(proj_data_info_sptr,
-                                                                    density_info_sptr_v,
+                                                                    density_info_ptr_v,
                                                                     do_symmetry_90degrees_min_phi,
                                                                     do_symmetry_180degrees_min_phi,
                                                                     do_symmetry_swap_segment,
@@ -405,17 +405,17 @@ ProjMatrixByBinUsingRayTracing::set_up(
   // use FOV which is slightly 'inside' the image to avoid
   // index out of range
   max_pos =
-    density_info_sptr
+    density_info_ptr
       ->get_relative_coordinates_for_indices(max_index + 0.45F);
   min_pos =
-    density_info_sptr
+    density_info_ptr
       ->get_relative_coordinates_for_indices(min_index - 0.45F);
 #else
   max_pos =
-    density_info_sptr
+    density_info_ptr
       ->get_relative_coordinates_for_indices(max_index);
   min_pos =
-    density_info_sptr
+    density_info_ptr
       ->get_relative_coordinates_for_indices(min_index);
 #endif
   fovrad_in_mm =
@@ -804,7 +804,7 @@ ProjMatrixByBinUsingRayTracing::calculate_proj_matrix_elems_for_one_bin(ProjMatr
                         voxel_size,
                         restrict_to_cylindrical_FOV,
                         num_lors_per_axial_pos*num_tangential_LORs,
-                        *density_info_sptr, *proj_data_info_sptr);
+                        *density_info_ptr, *proj_data_info_ptr);
       //std::cerr << "ray traced size " << ray_traced_lor.size() << std::endl;
       lor.merge(ray_traced_lor);
     }
