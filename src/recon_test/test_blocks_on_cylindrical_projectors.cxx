@@ -170,9 +170,8 @@ BlocksTests::run_symmetry_test(ForwardProjectorByBin& forw_projector1, ForwardPr
   Ellipsoid ellipsoid(CartesianCoordinate3D<float>(/*radius_z*/ 6 * grid_spacing.z(),
                                                    /*radius_y*/ 6 * grid_spacing.y(),
                                                    /*radius_x*/ 6 * grid_spacing.x()),
-                      /*centre*/
-                      CartesianCoordinate3D<float>(
-                          (image.get_min_index() + image.get_max_index()) / 2 * grid_spacing.z(), -34 * grid_spacing.y(), 0),
+                      image.get_image_centre_in_physical_coordinates()
+                          + CartesianCoordinate3D<float>(0, -34 * grid_spacing.y(), 0),
                       direction_vectors);
 
   ellipsoid.construct_volume(image, make_coordinate(3, 3, 3));
@@ -184,11 +183,9 @@ BlocksTests::run_symmetry_test(ForwardProjectorByBin& forw_projector1, ForwardPr
     {
       theta1 = i * _PI / 180;
 
-      CartesianCoordinate3D<float> origin1((image.get_min_index() + image.get_max_index()) / 2 * grid_spacing.z(),
-                                           -34 * grid_spacing.y() * cos(theta1),
-                                           34 * grid_spacing.y() * sin(theta1));
+      CartesianCoordinate3D<float> origin1(0, -34 * grid_spacing.y() * cos(theta1), 34 * grid_spacing.y() * sin(theta1));
 
-      ellipsoid.set_origin(origin1);
+      ellipsoid.set_origin(origin1 + image.get_image_centre_in_physical_coordinates());
       ellipsoid.construct_volume(image1, make_coordinate(3, 3, 3));
       image += image1;
     }
@@ -200,11 +197,9 @@ BlocksTests::run_symmetry_test(ForwardProjectorByBin& forw_projector1, ForwardPr
     {
       theta2 = i * _PI / 180;
 
-      CartesianCoordinate3D<float> origin2((image.get_min_index() + image.get_max_index()) / 2 * grid_spacing.z(),
-                                           -34 * grid_spacing.y() * cos(theta2),
-                                           34 * grid_spacing.y() * sin(theta2));
+      CartesianCoordinate3D<float> origin2(0, -34 * grid_spacing.y() * cos(theta2), 34 * grid_spacing.y() * sin(theta2));
 
-      ellipsoid.set_origin(origin2);
+      ellipsoid.set_origin(origin2 + image22.get_image_centre_in_physical_coordinates());
       ellipsoid.construct_volume(image22, make_coordinate(3, 3, 3));
       image += image22;
     }
@@ -298,9 +293,7 @@ BlocksTests::run_plane_symmetry_test(ForwardProjectorByBin& forw_projector1, For
   Ellipsoid plane(CartesianCoordinate3D<float>(/*edge_z*/ 25 * grid_spacing.z(),
                                                /*edge_y*/ 91 * grid_spacing.y(),
                                                /*edge_x*/ 5 * grid_spacing.x()),
-                  /*centre*/
-                  CartesianCoordinate3D<float>(
-                      (image.get_min_index() + image.get_max_index()) / 2 * grid_spacing.z(), 0 * grid_spacing.y(), 0),
+                  image.get_image_centre_in_physical_coordinates(),
                   direction_vectors);
 
   plane.construct_volume(image, make_coordinate(3, 3, 3));
@@ -316,9 +309,7 @@ BlocksTests::run_plane_symmetry_test(ForwardProjectorByBin& forw_projector1, For
   Ellipsoid plane2(CartesianCoordinate3D<float>(/*edge_z*/ 25 * grid_spacing.z(),
                                                 /*edge_y*/ 91 * grid_spacing.y(),
                                                 /*edge_x*/ 5 * grid_spacing.x()),
-                   /*centre*/
-                   CartesianCoordinate3D<float>(
-                       (image.get_min_index() + image.get_max_index()) / 2 * grid_spacing.z(), 0 * grid_spacing.y(), 0),
+                   image2.get_image_centre_in_physical_coordinates(),
                    direction2);
 
   plane2.construct_volume(image2, make_coordinate(3, 3, 3));
@@ -485,9 +476,7 @@ BlocksTests::run_axial_projection_test(ForwardProjectorByBin& forw_projector, Ba
   Ellipsoid plane(CartesianCoordinate3D<float>(/*edge_z*/ 50 * grid_spacing.z(),
                                                /*edge_y*/ 2 * grid_spacing.y(),
                                                /*edge_x*/ 2 * grid_spacing.x()),
-                  /*centre*/
-                  CartesianCoordinate3D<float>(
-                      (image.get_min_index() + image.get_max_index()) / 2 * grid_spacing.z(), 0 * grid_spacing.y(), 0),
+                  image.get_image_centre_in_physical_coordinates(),
                   direction_vectors);
 
   plane.construct_volume(image, make_coordinate(3, 3, 3));
@@ -569,8 +558,8 @@ BlocksTests::run_map_orientation_test(ForwardProjectorByBin& forw_projector1, Fo
                                                    /*radius_y*/ 6 * grid_spacing.y(),
                                                    /*radius_x*/ 6 * grid_spacing.x()),
                       /*centre*/
-                      CartesianCoordinate3D<float>(
-                          (image.get_min_index() + image.get_max_index()) / 2 * grid_spacing.z(), -34 * grid_spacing.y(), 0),
+                      CartesianCoordinate3D<float>(0, -34 * grid_spacing.y(), 0)
+                          + image.get_image_centre_in_physical_coordinates(),
                       direction_vectors);
 
   ellipsoid.construct_volume(image, make_coordinate(3, 3, 3));
@@ -581,11 +570,9 @@ BlocksTests::run_map_orientation_test(ForwardProjectorByBin& forw_projector1, Fo
     {
       theta1 = i * _PI / 180;
 
-      CartesianCoordinate3D<float> origin1((image.get_min_index() + image.get_max_index()) / 2 * grid_spacing.z(),
-                                           -34 * grid_spacing.y() * cos(theta1),
-                                           34 * grid_spacing.y() * sin(theta1));
+      CartesianCoordinate3D<float> origin1(0, -34 * grid_spacing.y() * cos(theta1), 34 * grid_spacing.y() * sin(theta1));
 
-      ellipsoid.set_origin(origin1);
+      ellipsoid.set_origin(origin1 + image.get_image_centre_in_physical_coordinates());
       ellipsoid.construct_volume(image1, make_coordinate(3, 3, 3));
       image += image1;
     }
@@ -834,7 +821,6 @@ BlocksTests::run_intersection_with_cylinder_test()
   };
 
   const auto segment_sequence = ProjData::standard_segment_sequence(*proj_data_info);
-  std::size_t index(0);
   for (int seg : segment_sequence)
     {
       bin.segment_num() = seg;
