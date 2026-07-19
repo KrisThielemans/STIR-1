@@ -19,6 +19,9 @@
 */
 
 #include "stir/info.h"
+#include "stir/format.h"
+#include "stir/stream.h"
+#include <iostream>
 #include "stir/make_array.h"
 #include "stir/ProjDataInMemory.h"
 #include "stir/DiscretisedDensity.h"
@@ -161,7 +164,7 @@ BlocksTests::run_symmetry_test(ForwardProjectorByBin& forw_projector1, ForwardPr
   float theta1 = 0;
   float theta2 = 0;
 
-  const IndexRange<3> range(Coordinate3D<int>(0, -45, -44), Coordinate3D<int>(24, 44, 45));
+  const IndexRange<3> range(Coordinate3D<int>(0, -45, -44), Coordinate3D<int>(2, 44, 45));
   VoxelsOnCartesianGrid<float> image(exam_info_sptr, range, origin, grid_spacing);
 
   const Array<2, float> direction_vectors = make_array(
@@ -170,7 +173,7 @@ BlocksTests::run_symmetry_test(ForwardProjectorByBin& forw_projector1, ForwardPr
   Ellipsoid ellipsoid(CartesianCoordinate3D<float>(/*radius_z*/ 6 * grid_spacing.z(),
                                                    /*radius_y*/ 6 * grid_spacing.y(),
                                                    /*radius_x*/ 6 * grid_spacing.x()),
-                      image.get_image_centre_in_physical_coordinates()
+                      CartesianCoordinate3D<float>(image.get_image_centre_in_physical_coordinates().z(), 0.F, 0.F)
                           + CartesianCoordinate3D<float>(0, -34 * grid_spacing.y(), 0),
                       direction_vectors);
 
@@ -185,7 +188,7 @@ BlocksTests::run_symmetry_test(ForwardProjectorByBin& forw_projector1, ForwardPr
 
       CartesianCoordinate3D<float> origin1(0, -34 * grid_spacing.y() * cos(theta1), 34 * grid_spacing.y() * sin(theta1));
 
-      ellipsoid.set_origin(origin1 + image.get_image_centre_in_physical_coordinates());
+      ellipsoid.set_origin(origin1 + CartesianCoordinate3D<float>(image.get_image_centre_in_physical_coordinates().z(), 0.F, 0.F));
       ellipsoid.construct_volume(image1, make_coordinate(3, 3, 3));
       image += image1;
     }
@@ -199,7 +202,7 @@ BlocksTests::run_symmetry_test(ForwardProjectorByBin& forw_projector1, ForwardPr
 
       CartesianCoordinate3D<float> origin2(0, -34 * grid_spacing.y() * cos(theta2), 34 * grid_spacing.y() * sin(theta2));
 
-      ellipsoid.set_origin(origin2 + image22.get_image_centre_in_physical_coordinates());
+      ellipsoid.set_origin(origin2 + CartesianCoordinate3D<float>(image.get_image_centre_in_physical_coordinates().z(), 0.F, 0.F));
       ellipsoid.construct_volume(image22, make_coordinate(3, 3, 3));
       image += image22;
     }
@@ -224,7 +227,7 @@ BlocksTests::run_symmetry_test(ForwardProjectorByBin& forw_projector1, ForwardPr
   proj_data_info_blocks_sptr = set_direct_projdata_info<ProjDataInfoBlocksOnCylindricalNoArcCorr>(scannerBlocks_sptr, 2);
   //    now forward-project images
 
-  // info(format("Test blocks on Cylindrical: Forward projector used: {}", forw_projector1.parameter_info()));
+  info(format("Test blocks on Cylindrical run_symmetry_test:  Forward projector used: {}", forw_projector1.parameter_info()));
 
   forw_projector1.set_up(proj_data_info_blocks_sptr, image1_sptr);
 
@@ -281,7 +284,7 @@ BlocksTests::run_plane_symmetry_test(ForwardProjectorByBin& forw_projector1, For
   CartesianCoordinate3D<float> grid_spacing(1.1, 2.2, 2.2);
   float phi1;
   float phi2;
-  const IndexRange<3> range(Coordinate3D<int>(0, -45, -44), Coordinate3D<int>(24, 44, 45));
+  const IndexRange<3> range(Coordinate3D<int>(0, -45, -44), Coordinate3D<int>(2, 44, 45));
   VoxelsOnCartesianGrid<float> image(exam_info_sptr, range, origin, grid_spacing);
 
   //    60 degrees
@@ -293,7 +296,7 @@ BlocksTests::run_plane_symmetry_test(ForwardProjectorByBin& forw_projector1, For
   Ellipsoid plane(CartesianCoordinate3D<float>(/*edge_z*/ 25 * grid_spacing.z(),
                                                /*edge_y*/ 91 * grid_spacing.y(),
                                                /*edge_x*/ 5 * grid_spacing.x()),
-                  image.get_image_centre_in_physical_coordinates(),
+                  CartesianCoordinate3D<float>(image.get_image_centre_in_physical_coordinates().z(), 0.F, 0.F),
                   direction_vectors);
 
   plane.construct_volume(image, make_coordinate(3, 3, 3));
@@ -309,7 +312,7 @@ BlocksTests::run_plane_symmetry_test(ForwardProjectorByBin& forw_projector1, For
   Ellipsoid plane2(CartesianCoordinate3D<float>(/*edge_z*/ 25 * grid_spacing.z(),
                                                 /*edge_y*/ 91 * grid_spacing.y(),
                                                 /*edge_x*/ 5 * grid_spacing.x()),
-                   image2.get_image_centre_in_physical_coordinates(),
+                   CartesianCoordinate3D<float>(image2.get_image_centre_in_physical_coordinates().z(), 0.F, 0.F),
                    direction2);
 
   plane2.construct_volume(image2, make_coordinate(3, 3, 3));
@@ -464,8 +467,9 @@ BlocksTests::run_axial_projection_test(ForwardProjectorByBin& forw_projector, Ba
   CartesianCoordinate3D<float> origin(0, 0, 0);
   CartesianCoordinate3D<float> grid_spacing(1.1, 2.2, 2.2);
 
-  const IndexRange<3> range(Coordinate3D<int>(0, -45, -45), Coordinate3D<int>(24, 44, 44));
+  const IndexRange<3> range(Coordinate3D<int>(0, -45, -45), Coordinate3D<int>(6, 44, 44));
   VoxelsOnCartesianGrid<float> image(exam_info_sptr, range, origin, grid_spacing);
+  std::cout << "\nimage centre XXXXXX" << image.get_image_centre_in_physical_coordinates() << std::endl;
 
   //    60 degrees
   float phi1 = 0 * _PI / 180;
@@ -476,7 +480,7 @@ BlocksTests::run_axial_projection_test(ForwardProjectorByBin& forw_projector, Ba
   Ellipsoid plane(CartesianCoordinate3D<float>(/*edge_z*/ 50 * grid_spacing.z(),
                                                /*edge_y*/ 2 * grid_spacing.y(),
                                                /*edge_x*/ 2 * grid_spacing.x()),
-                  image.get_image_centre_in_physical_coordinates(),
+                  CartesianCoordinate3D<float>(image.get_image_centre_in_physical_coordinates().z(), 0.F, 0.F),
                   direction_vectors);
 
   plane.construct_volume(image, make_coordinate(3, 3, 3));
@@ -498,7 +502,7 @@ BlocksTests::run_axial_projection_test(ForwardProjectorByBin& forw_projector, Ba
   shared_ptr<DiscretisedDensity<3, float>> bck_proj_image_sptr(image.clone());
   write_to_file("axial_test", *image_sptr);
 
-  // info(format("Test blocks on Cylindrical: Forward projector used: {}", forw_projector.parameter_info()));
+  info(format("Test blocks on Cylindrical run_axial_projection_test: Forward projector used: {}", forw_projector.parameter_info()));
 
   forw_projector.set_up(proj_data_info_blocks_sptr, image_sptr);
   back_projector.set_up(proj_data_info_blocks_sptr, bck_proj_image_sptr);
@@ -520,8 +524,8 @@ BlocksTests::run_axial_projection_test(ForwardProjectorByBin& forw_projector, Ba
 
   // get two planes in the image that are equidistant from the z center
   int centre_z = (max_z - min_z) / 2;
-  int plane_idA = centre_z - 5;
-  int plane_idB = centre_z + 5;
+  int plane_idA = std::max(min_z, centre_z - 5);
+  int plane_idB = std::min(max_z, centre_z + 5);
 
   for (int y = min_y; y < max_y; y++)
     for (int x = min_x; x < max_x; x++)
@@ -559,7 +563,7 @@ BlocksTests::run_map_orientation_test(ForwardProjectorByBin& forw_projector1, Fo
                                                    /*radius_x*/ 6 * grid_spacing.x()),
                       /*centre*/
                       CartesianCoordinate3D<float>(0, -34 * grid_spacing.y(), 0)
-                          + image.get_image_centre_in_physical_coordinates(),
+                          + CartesianCoordinate3D<float>(image.get_image_centre_in_physical_coordinates().z(), 0.F, 0.F),
                       direction_vectors);
 
   ellipsoid.construct_volume(image, make_coordinate(3, 3, 3));
@@ -572,7 +576,7 @@ BlocksTests::run_map_orientation_test(ForwardProjectorByBin& forw_projector1, Fo
 
       CartesianCoordinate3D<float> origin1(0, -34 * grid_spacing.y() * cos(theta1), 34 * grid_spacing.y() * sin(theta1));
 
-      ellipsoid.set_origin(origin1 + image.get_image_centre_in_physical_coordinates());
+      ellipsoid.set_origin(origin1 + CartesianCoordinate3D<float>(image.get_image_centre_in_physical_coordinates().z(), 0.F, 0.F));
       ellipsoid.construct_volume(image1, make_coordinate(3, 3, 3));
       image += image1;
     }
@@ -677,7 +681,7 @@ BlocksTests::run_projection_test(ForwardProjectorByBin& forw_projector1, Forward
   CartesianCoordinate3D<float> origin(0, 0, 0);
   CartesianCoordinate3D<float> grid_spacing(1.1, 2.2, 2.2);
 
-  const IndexRange<3> range(Coordinate3D<int>(0, -45, -44), Coordinate3D<int>(24, 44, 45));
+  const IndexRange<3> range(Coordinate3D<int>(0, -45, -44), Coordinate3D<int>(2, 44, 45));
   VoxelsOnCartesianGrid<float> image(exam_info_sptr, range, origin, grid_spacing);
 
   const Array<2, float> direction_vectors
